@@ -4,5 +4,12 @@
     "@kitajs/html": "npm:@kitajs/html@^4.2.11",
     "@std/path": "jsr:@std/path@^1.1.4",
     "kysely": "npm:kysely@^0.28.9"
+  },
+  "lint": {
+    "rules": {
+      "exclude": [
+        "no-explicit-any"
+      ]
+    }
   }
 }

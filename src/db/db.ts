@@ -1,26 +1,31 @@
 import { FileMigrationProvider, Kysely, Migrator } from "kysely";
 import { Database } from "@db/sqlite";
 import { promises as fs } from "node:fs";
-import * as path from "node:path";
-import process from "node:process";
+import { join, toFileUrl } from "@std/path";
 
 import SqliteDialect from "./dialect.ts";
 import { DB } from "./types.ts";
 export * from "./types.ts";
 
 export const db = new Kysely<DB>({
-    dialect: SqliteDialect(new Database(process.env.DB || "./data/db"))
+    dialect: SqliteDialect(new Database(Deno.env.get("DB") || "./data/db"))
 });
 
 // auto-migrate
 const migrator = new Migrator({
     db,
     provider: new FileMigrationProvider({
-        fs, path,
-        migrationFolder: path.join(import.meta.dirname, "migrations"),
+        fs,
+        path: {
+            join: (a: string, ...b: string[]): string => toFileUrl(join(a, ...b)).toString()
+        },
+        migrationFolder: join(import.meta.dirname, "migrations"),
     })
 });
 
 const { error, results } = await migrator.migrateToLatest();
 results?.forEach(res => console.log(`migration ${res.migrationName}: ${res.status}`));
-if (error) process.exit(1);
+if (error) {
+    console.error(error);
+    Deno.exit(1);
+};
