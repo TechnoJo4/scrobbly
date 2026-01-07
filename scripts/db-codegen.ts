@@ -9,11 +9,11 @@ const types: Record<string, [string, string]> = {
 };
 
 let out = "import { ColumnType } from \"kysely\";\n";
-let dbTbl = "\nexport interface DB {\n";
+let dbTbl = "\nexport interface DB {";
 
 for (const tbl of await db.introspection.getTables()) {
     const typeName = upper0(tbl.name);
-    dbTbl += `\t${tbl.name}: ${typeName};`;
+    dbTbl += `\n\t${tbl.name}: ${typeName};`;
 
     out += `\nexport interface ${typeName} {`;
     for (const col of tbl.columns) {
