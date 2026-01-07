@@ -3,8 +3,11 @@ import { promises as fs } from "node:fs";
 
 const reRouteName = /^(.+).tsx?$/;
 
-const basePath = join(import.meta.dirname, "routes");
-const routes = {};
+const srcPath = import.meta.dirname;
+if (!srcPath) throw new Error("couldn't get import.meta.dirname");
+
+const basePath = join(srcPath, "routes");
+const routes: Record<string, Deno.ServeHandler> = {};
 for (const file of await fs.readdir(basePath, { withFileTypes: true, recursive: true })) {
     const match = reRouteName.exec(file.name);
     if (match !== null && file.isFile()) {
@@ -13,7 +16,7 @@ for (const file of await fs.readdir(basePath, { withFileTypes: true, recursive: 
 
         const routeName = match[1] === "index" ? "" : match[1];
         const route = relative(basePath, file.parentPath).replace(SEPARATOR, "/") + "/" + routeName;
-        routes[route] = res.default;
+        routes[route.startsWith("/") ? route : "/" + route] = res.default;
     }
 }
 
@@ -26,10 +29,9 @@ export default {
                 return handler(req, info);
             } catch (e) {
                 console.error(e);
-                return new Response(e.toString(), { status: 500 });
+                return new Response("internal server error", { status: 500 });
             }
         }
-        return new Response("Not found", { status: 404 });
+        return new Response("not found", { status: 404 });
     }
 } satisfies Deno.ServeDefaultExport;
-

@@ -7,9 +7,10 @@
     "jsr:@std/fmt@1": "1.0.8",
     "jsr:@std/fs@1": "1.0.21",
     "jsr:@std/internal@^1.0.12": "1.0.12",
-    "jsr:@std/path@1": "1.0.9",
+    "jsr:@std/path@1": "1.1.4",
     "jsr:@std/path@1.0": "1.0.9",
     "jsr:@std/path@^1.1.4": "1.1.4",
+    "jsr:@valibot/valibot@^1.2.0": "1.2.0",
     "npm:@kitajs/html@^4.2.11": "4.2.11",
     "npm:kysely@~0.28.9": "0.28.9"
   },
@@ -54,6 +55,9 @@
       "dependencies": [
         "jsr:@std/internal"
       ]
+    },
+    "@valibot/valibot@1.2.0": {
+      "integrity": "61c118a4d027ed55912caf381c78f0a178f335f46ad0c4bcb136498dc1ef2285"
     }
   },
   "npm": {
@@ -74,6 +78,7 @@
     "dependencies": [
       "jsr:@db/sqlite@0.13",
       "jsr:@std/path@^1.1.4",
+      "jsr:@valibot/valibot@^1.2.0",
       "npm:@kitajs/html@^4.2.11",
       "npm:kysely@~0.28.9"
     ]

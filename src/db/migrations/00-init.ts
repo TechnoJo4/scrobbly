@@ -6,7 +6,8 @@ export async function up(db: Kysely<any>): Promise<void> {
     await sql`CREATE TABLE unit(
         name TEXT PRIMARY KEY NOT NULL,
         pre TEXT NOT NULL,
-        post TEXT NOT NULL
+        post TEXT NOT NULL,
+        decimals INTEGER NOT NULL
     ) STRICT;`.execute(db);
 
     await sql`CREATE TABLE task(
@@ -14,6 +15,14 @@ export async function up(db: Kysely<any>): Promise<void> {
         name TEXT NOT NULL,
         unit TEXT NOT NULL,
         FOREIGN KEY (unit) REFERENCES unit (name)
+    ) STRICT;`.execute(db);
+
+    await sql`CREATE TABLE event(
+        id INTEGER PRIMARY KEY NOT NULL,
+        task INTEGER NOT NULL,
+        time INTEGER NOT NULL,
+        qty INTEGER NOT NULL,
+        FOREIGN KEY (task) REFERENCES task (id)
     ) STRICT;`.execute(db);
 
     await sql`CREATE TABLE quota(

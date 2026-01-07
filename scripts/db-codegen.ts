@@ -8,11 +8,12 @@ const types: Record<string, [string, string]> = {
     BLOB: ["Uint8Array", "Uint8Array"]
 };
 
-let out = "import { ColumnType } from \"kysely\";\n\ntype Integer = number | bigint | boolean;\n";
+let out = "import { ColumnType, Selectable } from \"kysely\";\n\ntype Integer = number | bigint | boolean;\n";
 let dbTbl = "\nexport interface DB {";
 
 for (const tbl of await db.introspection.getTables()) {
-    const typeName = upper0(tbl.name);
+    const casedName = upper0(tbl.name)
+    const typeName = casedName + "Table";
     dbTbl += `\n\t${tbl.name}: ${typeName};`;
 
     out += `\nexport interface ${typeName} {`;
@@ -37,8 +38,7 @@ for (const tbl of await db.introspection.getTables()) {
             : `${col.name}: ColumnType<${s}, ${i}, ${u}>;`;
     }
     out += "\n}\n";
+    out += `\nexport type ${casedName} = Selectable<${typeName}>;\n`;
 }
 out += dbTbl + "\n}\n";
-
-console.log(out);
 await Deno.writeTextFile("src/db/types.ts", out);

@@ -1,36 +1,55 @@
-import { ColumnType } from "kysely";
+import { ColumnType, Selectable } from "kysely";
 
 type Integer = number | bigint | boolean;
 
-export interface Quota {
+export interface EventTable {
+	id: ColumnType<number, Integer | undefined, Integer>;
+	task: ColumnType<number, Integer, Integer>;
+	time: ColumnType<number, Integer, Integer>;
+	qty: ColumnType<number, Integer, Integer>;
+}
+
+export type Event = Selectable<EventTable>;
+
+export interface QuotaTable {
 	id: ColumnType<number, Integer | undefined, Integer>;
 	task: ColumnType<number, Integer, Integer>;
 	period: ColumnType<number, Integer, Integer>;
 	max: ColumnType<number, Integer, Integer>;
 }
 
-export interface Reminder {
+export type Quota = Selectable<QuotaTable>;
+
+export interface ReminderTable {
 	id: ColumnType<number, Integer | undefined, Integer>;
 	task: ColumnType<number, Integer, Integer>;
 	since: ColumnType<number, Integer, Integer>;
 	every: ColumnType<number, Integer, Integer>;
 }
 
-export interface Task {
+export type Reminder = Selectable<ReminderTable>;
+
+export interface TaskTable {
 	id: ColumnType<number, Integer | undefined, Integer>;
 	name: string;
 	unit: string;
 }
 
-export interface Unit {
+export type Task = Selectable<TaskTable>;
+
+export interface UnitTable {
 	name: string;
 	pre: string;
 	post: string;
+	decimals: ColumnType<number, Integer, Integer>;
 }
 
+export type Unit = Selectable<UnitTable>;
+
 export interface DB {
-	quota: Quota;
-	reminder: Reminder;
-	task: Task;
-	unit: Unit;
+	event: EventTable;
+	quota: QuotaTable;
+	reminder: ReminderTable;
+	task: TaskTable;
+	unit: UnitTable;
 }

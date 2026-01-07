@@ -7,9 +7,12 @@ import SqliteDialect from "./dialect.ts";
 import { DB } from "./types.ts";
 export * from "./types.ts";
 
-export const db = new Kysely<DB>({
-    dialect: SqliteDialect(new Database(Deno.env.get("DB") || "./data/db"))
-});
+const conn = new Database(Deno.env.get("DB") || "./data/db");
+conn.exec("pragma foreign_keys = ON");
+
+export const db = new Kysely<DB>({ dialect: SqliteDialect(conn) });
+
+if (!import.meta.dirname) throw new Error("can't get import.meta.dirname");
 
 // auto-migrate
 const migrator = new Migrator({
