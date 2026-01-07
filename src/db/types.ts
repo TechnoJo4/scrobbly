@@ -1,21 +1,23 @@
 import { ColumnType } from "kysely";
 
+type Integer = number | bigint | boolean;
+
 export interface Quota {
-	id: ColumnType<number, number | bigint | boolean | undefined, number | bigint | boolean>;
-	task: ColumnType<number, number | bigint | boolean, number | bigint | boolean>;
-	period: ColumnType<number, number | bigint | boolean, number | bigint | boolean>;
-	max: ColumnType<number, number | bigint | boolean, number | bigint | boolean>;
+	id: ColumnType<number, Integer | undefined, Integer>;
+	task: ColumnType<number, Integer, Integer>;
+	period: ColumnType<number, Integer, Integer>;
+	max: ColumnType<number, Integer, Integer>;
 }
 
 export interface Reminder {
-	id: ColumnType<number, number | bigint | boolean | undefined, number | bigint | boolean>;
-	task: ColumnType<number, number | bigint | boolean, number | bigint | boolean>;
-	since: ColumnType<number, number | bigint | boolean, number | bigint | boolean>;
-	every: ColumnType<number, number | bigint | boolean, number | bigint | boolean>;
+	id: ColumnType<number, Integer | undefined, Integer>;
+	task: ColumnType<number, Integer, Integer>;
+	since: ColumnType<number, Integer, Integer>;
+	every: ColumnType<number, Integer, Integer>;
 }
 
 export interface Task {
-	id: ColumnType<number, number | bigint | boolean | undefined, number | bigint | boolean>;
+	id: ColumnType<number, Integer | undefined, Integer>;
 	name: string;
 	unit: string;
 }

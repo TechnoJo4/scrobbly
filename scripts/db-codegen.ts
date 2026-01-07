@@ -2,13 +2,13 @@ import { db } from "../src/db/db.ts";
 
 const upper0 = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const types: Record<string, [string, string]> = {
-    INTEGER: ["number", "number | bigint | boolean"],
+    INTEGER: ["number", "Integer"],
     TEXT: ["string", "string"],
     FLOAT: ["number", "number"],
     BLOB: ["Uint8Array", "Uint8Array"]
 };
 
-let out = "import { ColumnType } from \"kysely\";\n";
+let out = "import { ColumnType } from \"kysely\";\n\ntype Integer = number | bigint | boolean;\n";
 let dbTbl = "\nexport interface DB {";
 
 for (const tbl of await db.introspection.getTables()) {
