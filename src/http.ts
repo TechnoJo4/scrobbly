@@ -19,6 +19,10 @@ export const reqParamsTo = <TSchema extends v.GenericSchema>(schema: TSchema, re
 
 export type APIResponse<T extends object> = T | { error: string; status: number | undefined };
 
+export type APISuccess = APIResponse<{ success: true }>;
+
+export const apiSuccess: APISuccess = { success: true };
+
 export const apiNotFound: APIResponse<any> = { error: "not found", status: 404 };
 
 export const jsonHeaders = {
