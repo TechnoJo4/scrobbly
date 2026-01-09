@@ -22,10 +22,10 @@ export default byMethod({
                 <h2>edit task</h2>
                 <form method="post">
                     <Field label="name">
-                        <input type="text" id="name" name="name" value={task.name} required></input>
+                        <input type="text" name="name" value={task.name} required></input>
                     </Field>
                     <Field label="unit">
-                        <select id="unit" name="unit">
+                        <select name="unit">
                             {units.map(u => <option value={u.name} selected={task.unit == u.name}>{u.name}</option>)}
                         </select>
                     </Field>

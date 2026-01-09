@@ -37,7 +37,9 @@ export default byMethod({
                     {buttons.map(b => {
                         const t = tasks.find(t => t.id == b.task)!;
                         return <li class="button">
-                            {b.label && b.label+": "}{t.name} ({qtyToStr(b.qty, t)})
+                            <a href={`/manage/button?id=${b.id}`}>
+                                {b.label && b.label+": "}{t.name} ({qtyToStr(b.qty, t)})
+                            </a>
                         </li>;
                     })}
                 </ul>
