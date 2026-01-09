@@ -1,11 +1,10 @@
-import * as v from "@valibot/valibot";
 import { byMethod, apiGet, apiRoute, urlParamsTo, apiNotFound, apiSuccess, APISuccess } from "../../http.ts";
 import { db, Button } from "../../db/db.ts";
-import { intStr, button } from "../../schema.ts";
+import { button, idParam } from "../../schema.ts";
 
 export default byMethod({
     GET: apiGet<Button>(async (req) => {
-        const { id } = urlParamsTo(v.object({ id: intStr }), req);
+        const { id } = urlParamsTo(idParam, req);
         return await db.selectFrom("button")
             .where("id", "=", id)
             .selectAll()
@@ -18,7 +17,7 @@ export default byMethod({
             .executeTakeFirstOrThrow();
     }),
     DELETE: apiGet<APISuccess>(async (req) => {
-        const { id } = urlParamsTo(v.object({ id: intStr }), req);
+        const { id } = urlParamsTo(idParam, req);
         const res = await db.deleteFrom("button").where("id", "=", id).executeTakeFirst();
         return res.numDeletedRows !== 0n ? apiSuccess : apiNotFound;
     })

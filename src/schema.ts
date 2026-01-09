@@ -4,6 +4,8 @@ export const int = v.pipe(v.number(), v.integer());
 
 export const intStr = v.pipe(v.string(), v.toNumber(), v.integer());
 
+export const idParam = v.object({ id: intStr });
+
 export const unit = v.object({
     name: v.string(),
     pre: v.optional(v.string(), ""),

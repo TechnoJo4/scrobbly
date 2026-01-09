@@ -1,12 +1,11 @@
-import * as v from "@valibot/valibot";
 import { byMethod, apiGet, apiRoute, urlParamsTo, apiNotFound, apiSuccess, APISuccess } from "../../http.ts";
 import { db, Event } from "../../db/db.ts";
-import { intStr, event } from "../../schema.ts";
+import { event, idParam } from "../../schema.ts";
 import { time } from "../../time.ts";
 
 export default byMethod({
     GET: apiGet<Event>(async (req) => {
-        const { id } = urlParamsTo(v.object({ id: intStr }), req);
+        const { id } = urlParamsTo(idParam, req);
         return await db.selectFrom("event")
             .where("id", "=", id)
             .selectAll()
@@ -22,7 +21,7 @@ export default byMethod({
             .executeTakeFirstOrThrow();
     }),
     DELETE: apiGet<APISuccess>(async (req) => {
-        const { id } = urlParamsTo(v.object({ id: intStr }), req);
+        const { id } = urlParamsTo(idParam, req);
         const res = await db.deleteFrom("event").where("id", "=", id).executeTakeFirst();
         return res.numDeletedRows !== 0n ? apiSuccess : apiNotFound;
     })

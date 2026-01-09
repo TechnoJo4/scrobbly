@@ -3,9 +3,11 @@ import { byMethod, apiGet, apiRoute, urlParamsTo, apiNotFound, APISuccess, apiSu
 import { db, Unit } from "../../db/db.ts";
 import { unit } from "../../schema.ts";
 
+const nameParam = v.object({ name: v.string() });
+
 export default byMethod({
     GET: apiGet<Unit>(async (req) => {
-        const { name } = urlParamsTo(v.object({ name: v.string() }), req);
+        const { name } = urlParamsTo(nameParam, req);
         return await db.selectFrom("unit")
             .where("name", "=", name)
             .selectAll()
@@ -18,7 +20,7 @@ export default byMethod({
             .executeTakeFirstOrThrow();
     }),
     DELETE: apiGet<APISuccess>(async (req) => {
-        const { name } = urlParamsTo(v.object({ name: v.string() }), req);
+        const { name } = urlParamsTo(nameParam, req);
         const res = await db.deleteFrom("unit").where("name", "=", name).executeTakeFirst();
         return res.numDeletedRows !== 0n ? apiSuccess : apiNotFound;
     })
