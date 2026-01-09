@@ -1,5 +1,6 @@
 import { join, toFileUrl, relative, SEPARATOR } from "@std/path";
 import { promises as fs } from "node:fs";
+import { HTTPError } from "./http.ts";
 
 const reRouteName = /^(.+).tsx?$/;
 
@@ -21,13 +22,17 @@ for (const file of await fs.readdir(basePath, { withFileTypes: true, recursive: 
 }
 
 export default {
-    fetch: function (req: Request, info: Deno.ServeHandlerInfo<Deno.Addr>): Response | Promise<Response> {
+    fetch: async function (req: Request, info: Deno.ServeHandlerInfo<Deno.Addr>): Promise<Response> {
         const pathname = new URL(req.url).pathname;
         const handler = routes[pathname];
         if (handler !== undefined) {
             try {
-                return handler(req, info);
+                return await handler(req, info);
             } catch (e) {
+                if (e instanceof HTTPError) {
+                    return e.res;
+                }
+
                 console.error(e);
                 return new Response("internal server error", { status: 500 });
             }

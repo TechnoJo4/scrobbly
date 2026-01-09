@@ -1,5 +1,14 @@
 import * as v from "@valibot/valibot";
 
+export class HTTPError extends Error {
+    override name: string = "HTTPError";
+    res: Response;
+    constructor(res: Response) {
+        super();
+        this.res = res;
+    }
+}
+
 export const byMethod = (methods: { [x in string]: Deno.ServeHandler }): Deno.ServeHandler => {
     const err = `method not allowed. use ${Object.keys(methods).join(", ")}`;
     return ((req: Request, info: Deno.ServeHandlerInfo<Deno.Addr>) => {
@@ -10,7 +19,11 @@ export const byMethod = (methods: { [x in string]: Deno.ServeHandler }): Deno.Se
 };
 
 export const paramsTo = <TSchema extends v.GenericSchema>(schema: TSchema, params: URLSearchParams): v.InferOutput<TSchema> => {
-    return v.parse(schema, Object.fromEntries(params.entries()));
+    try {
+        return v.parse(schema, Object.fromEntries(params.entries()));
+    } catch {
+        throw new HTTPError(new Response("request parsing failure", { status: 400 }));
+    }
 };
 
 export const urlParamsTo = <TSchema extends v.GenericSchema>(schema: TSchema, req: Request): v.InferOutput<TSchema> => {

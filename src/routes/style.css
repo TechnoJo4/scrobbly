@@ -54,8 +54,16 @@ h1, h2, h3, h4, h5, h6, p, ul {
     margin: 0;
 }
 
+a, a:visited {
+    color: #d8d8d8;
+}
+
 button {
     border: 1px solid black;
     border-radius: 0;
     padding: 0.2em;
+}
+
+table {
+    width: 100%;
 }

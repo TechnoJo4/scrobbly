@@ -29,7 +29,7 @@ export default byMethod({
 
                 <h2>tasks</h2>
                 <ul>
-                    {tasks.map(t => <li class="unit">{t.name} ({t.unit})</li>)}
+                    {tasks.map(t => <li class="task"><a href={`/manage/task?id=${t.id}`}>{t.name} ({t.unit})</a></li>)}
                 </ul>
             </Page>
         );
