@@ -18,8 +18,14 @@ export const task = v.object({
 
 export const event = v.object({
     task: int,
-    time: int,
+    time: v.optional(int),
     qty: int,
+});
+
+export const button = v.object({
+    task: int,
+    qty: int,
+    label: v.string(),
 });
 
 export const quota = v.object({

@@ -13,8 +13,12 @@ export const paramsTo = <TSchema extends v.GenericSchema>(schema: TSchema, param
     return v.parse(schema, Object.fromEntries(params.entries()));
 };
 
-export const reqParamsTo = <TSchema extends v.GenericSchema>(schema: TSchema, req: Request): v.InferOutput<TSchema> => {
+export const urlParamsTo = <TSchema extends v.GenericSchema>(schema: TSchema, req: Request): v.InferOutput<TSchema> => {
     return paramsTo(schema, new URL(req.url).searchParams);
+};
+
+export const bodyParamsTo = async <TSchema extends v.GenericSchema>(schema: TSchema, req: Request): Promise<v.InferOutput<TSchema>> => {
+    return paramsTo(schema, new URLSearchParams(await req.text()));
 };
 
 export type APIResponse<T extends object> = T | { error: string; status: number | undefined };
@@ -45,12 +49,16 @@ export const apiGet = <TResponse extends object>(f: (req: Request) => Promise<AP
 
 export const apiRoute = <TSchema extends v.GenericSchema, TResponse extends object>(schema: TSchema, f: (req: v.InferOutput<TSchema>) => Promise<APIResponse<TResponse>>): Deno.ServeHandler => {
     return async (req: Request) => {
-        const input = await req.json();
         try {
+            const input = await req.json();
             const parsed = v.parse(schema, input);
             const res = await f(parsed);
             return new Response(JSON.stringify(res), { headers: jsonHeaders });
         } catch (e) {
+            if (e instanceof SyntaxError)
+                return new Response(JSON.stringify({
+                    error: "request parsing failure: invalid json",
+                }), { status: 400, headers: jsonHeaders });
             if (e instanceof v.ValiError)
                 return new Response(JSON.stringify({
                     error: "request parsing failure",
@@ -61,3 +69,7 @@ export const apiRoute = <TSchema extends v.GenericSchema, TResponse extends obje
     };
 };
 
+export const redirect = (route: string) => new Response(null, {
+    status: 301,
+    headers: { location: route },
+})

@@ -7,7 +7,7 @@ import SqliteDialect from "./dialect.ts";
 import { DB } from "./types.ts";
 export * from "./types.ts";
 
-const conn = new Database(Deno.env.get("DB") || "./data/db");
+const conn = new Database(Deno.env.get("DB") || "./data/db", { int64: true });
 conn.exec("pragma foreign_keys = ON");
 
 export const db = new Kysely<DB>({ dialect: SqliteDialect(conn) });

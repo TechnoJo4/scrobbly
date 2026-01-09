@@ -1,6 +1,7 @@
 {
   "imports": {
     "@db/sqlite": "jsr:@db/sqlite@^0.13.0",
+    "@oomfware/jsx": "npm:@oomfware/jsx@^0.1.1",
     "@std/path": "jsr:@std/path@^1.1.4",
     "@valibot/valibot": "jsr:@valibot/valibot@^1.2.0",
     "kysely": "npm:kysely@^0.28.9"
@@ -8,8 +9,13 @@
   "lint": {
     "rules": {
       "exclude": [
-        "no-explicit-any"
+        "no-explicit-any",
+        "jsx-key"
       ]
     }
-  }
+  },
+	"compilerOptions": {
+		"jsx": "react-jsx",
+		"jsxImportSource": "@oomfware/jsx"
+	}
 }

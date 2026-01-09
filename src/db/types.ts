@@ -2,6 +2,15 @@ import { ColumnType, Selectable } from "kysely";
 
 type Integer = number | bigint | boolean;
 
+export interface ButtonTable {
+	id: ColumnType<number, Integer | undefined, Integer>;
+	label: string;
+	task: ColumnType<number, Integer, Integer>;
+	qty: ColumnType<number, Integer, Integer>;
+}
+
+export type Button = Selectable<ButtonTable>;
+
 export interface EventTable {
 	id: ColumnType<number, Integer | undefined, Integer>;
 	task: ColumnType<number, Integer, Integer>;
@@ -47,6 +56,7 @@ export interface UnitTable {
 export type Unit = Selectable<UnitTable>;
 
 export interface DB {
+	button: ButtonTable;
 	event: EventTable;
 	quota: QuotaTable;
 	reminder: ReminderTable;

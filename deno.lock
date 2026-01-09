@@ -11,7 +11,7 @@
     "jsr:@std/path@1.0": "1.0.9",
     "jsr:@std/path@^1.1.4": "1.1.4",
     "jsr:@valibot/valibot@^1.2.0": "1.2.0",
-    "npm:@kitajs/html@^4.2.11": "4.2.11",
+    "npm:@oomfware/jsx@~0.1.1": "0.1.1",
     "npm:kysely@~0.28.9": "0.28.9"
   },
   "jsr": {
@@ -61,14 +61,8 @@
     }
   },
   "npm": {
-    "@kitajs/html@4.2.11": {
-      "integrity": "sha512-gOe+zzCZKN2fPT1FUK32mHsr21ILcAOUUux/yDqQthInW8egN8RuxVp+zP3KhwWETVACkurBiKV9RWuNw+ceiw==",
-      "dependencies": [
-        "csstype"
-      ]
-    },
-    "csstype@3.2.3": {
-      "integrity": "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ=="
+    "@oomfware/jsx@0.1.1": {
+      "integrity": "sha512-FpYwn2R05d7zOudo5HDRs8Yn/LxFX6DvHtBRipUttEdGaTWcG7kW01+1IV0K9T8ON355dZdhXl1zvr02NIsoRA=="
     },
     "kysely@0.28.9": {
       "integrity": "sha512-3BeXMoiOhpOwu62CiVpO6lxfq4eS6KMYfQdMsN/2kUCRNuF2YiEr7u0HLHaQU+O4Xu8YXE3bHVkwaQ85i72EuA=="
@@ -79,7 +73,7 @@
       "jsr:@db/sqlite@0.13",
       "jsr:@std/path@^1.1.4",
       "jsr:@valibot/valibot@^1.2.0",
-      "npm:@kitajs/html@^4.2.11",
+      "npm:@oomfware/jsx@~0.1.1",
       "npm:kysely@~0.28.9"
     ]
   }
