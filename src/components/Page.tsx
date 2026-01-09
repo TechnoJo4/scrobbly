@@ -8,7 +8,7 @@ export const Page = (props: { children: JSXNode }) => {
 		</head>
 		<body>
 			<main>
-				<h1>scrobbly</h1>
+				<a href="/"><h1>scrobbly</h1></a>
 				{props.children}
 			</main>
 		</body>
