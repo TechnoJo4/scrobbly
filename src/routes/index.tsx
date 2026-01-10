@@ -1,13 +1,15 @@
 import { render } from '@oomfware/jsx';
 import { db } from "../db/db.ts";
-import { latestReminderTime, time, timespanToStr } from "../time.ts";
+import { latestReminderTime, time, timespanToStr } from "../utils/time.ts";
 import { Page } from "../components/Page.tsx";
 import { Buttons } from "../components/Buttons.tsx";
 import { QtyInput } from "../components/QtyInput.tsx";
 import { Field } from "../components/Field.tsx";
-import { qtyToStr } from "../unit.ts";
+import { qtyToStr } from "../utils/unit.ts";
 
 export default (async () => {
+	const now = time();
+
 	const latestEvents = await db.selectFrom("event")
 		.select(({ fn }) => ["task", fn.max("time").as("time")])
 		.groupBy("task")
@@ -18,19 +20,33 @@ export default (async () => {
 		.select(["id", "since", "every", "task"])
 		.execute();
 
-	const tasks = await db.selectFrom("task")
+	const quotas = await db.selectFrom("quota")
+		.select(eb => [
+			"id", "task", "max",
+			eb.selectFrom("event")
+				.whereRef("event.task", "=", "quota.task")
+				.where("event.time", ">", eb => eb(eb.unary("-", "quota.period"), "+", now))
+				.select(eb => eb.fn.sum("event.qty").as("qty"))
+				.as("qty")
+		])
+		.execute();
+
+	const tasksOverQuota = new Set(quotas.filter(q => (q.qty as number) >= q.max).map(q => q.task));
+
+	const tasks = (await db.selectFrom("task")
 		.innerJoin("unit", "task.unit", "unit.name")
 		.select(["task.id", "task.name", "task.unit", "unit.decimals", "unit.pre", "unit.post"])
-		.execute();
+		.execute())
+		.map(t => ({ ...t, overQuota: tasksOverQuota.has(t.id) }));
 
 	const timeByTask = Object.fromEntries(latestEvents.map(e => [e.task, e.time]));
 	const activeReminders = reminders
+		.filter(r => !tasksOverQuota.has(r.task))
 		.map(r => ({ ...r, trigger: latestReminderTime(r.since, r.every) }))
 		.filter(r => !timeByTask[r.task] || timeByTask[r.task] < r.trigger);
 
 	const buttons = await db.selectFrom("button").selectAll().execute();
 
-	const now = time();
 	return render(
 		<Page>
 			<section class="section-buttons">
@@ -53,7 +69,11 @@ export default (async () => {
 				{tasks.map(t => <form class="scrobble-form" action="/scrobble" method="post">
 					<input type="hidden" name="task" value={t.id} />
 					<Field><QtyInput {...t} /></Field>
-					<Field><button type="submit" class="task-button">{t.name}</button></Field>
+					<Field>
+						<button type="submit" class={`scrobble-button${t.overQuota && " scrobble-button-over-quota"}`}>
+							{t.name}
+						</button>
+					</Field>
 				</form>)}
 			</section>
 

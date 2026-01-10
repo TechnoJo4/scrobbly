@@ -1,6 +1,6 @@
 import { join, toFileUrl, relative, SEPARATOR } from "@std/path";
 import { promises as fs } from "node:fs";
-import { HTTPError } from "./http.ts";
+import { HTTPError } from "./utils/http.ts";
 
 const reRouteName = /^(.+).tsx?$/;
 

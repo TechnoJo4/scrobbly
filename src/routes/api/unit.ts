@@ -1,7 +1,7 @@
 import * as v from "@valibot/valibot";
-import { byMethod, apiGet, apiRoute, urlParamsTo, apiNotFound, APISuccess, apiSuccess } from "../../http.ts";
+import { byMethod, apiGet, apiRoute, urlParamsTo, apiNotFound, APISuccess, apiSuccess } from "../../utils/http.ts";
 import { db, Unit } from "../../db/db.ts";
-import { unit } from "../../schema.ts";
+import { unit } from "../../utils/schema.ts";
 
 const nameParam = v.object({ name: v.string() });
 

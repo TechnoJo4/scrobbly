@@ -2,10 +2,10 @@ import * as v from "@valibot/valibot";
 
 import { db } from "../../db/db.ts";
 import { render } from '@oomfware/jsx';
-import { byMethod, bodyParamsTo, redirect } from "../../http.ts";
-import { intStr } from "../../schema.ts";
+import { byMethod, bodyParamsTo, redirect } from "../../utils/http.ts";
+import { intStr } from "../../utils/schema.ts";
 import { Page } from "../../components/Page.tsx";
-import { timespanToStr, timeUnits } from "../../time.ts";
+import { timespanToStr, timeUnits } from "../../utils/time.ts";
 import { Field } from "../../components/Field.tsx";
 
 export default byMethod({

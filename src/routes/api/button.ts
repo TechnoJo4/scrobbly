@@ -1,6 +1,6 @@
-import { byMethod, apiGet, apiRoute, urlParamsTo, apiNotFound, apiSuccess, APISuccess } from "../../http.ts";
+import { byMethod, apiGet, apiRoute, urlParamsTo, apiNotFound, apiSuccess, APISuccess } from "../../utils/http.ts";
 import { db, Button } from "../../db/db.ts";
-import { button, idParam } from "../../schema.ts";
+import { button, idParam } from "../../utils/schema.ts";
 
 export default byMethod({
     GET: apiGet<Button>(async (req) => {

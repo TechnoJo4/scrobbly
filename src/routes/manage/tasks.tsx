@@ -1,7 +1,7 @@
 import { db } from "../../db/db.ts";
 import { render } from '@oomfware/jsx';
-import { byMethod, bodyParamsTo, redirect } from "../../http.ts";
-import { task } from "../../schema.ts";
+import { byMethod, bodyParamsTo, redirect } from "../../utils/http.ts";
+import { task } from "../../utils/schema.ts";
 import { Page } from "../../components/Page.tsx";
 import { Field } from "../../components/Field.tsx";
 

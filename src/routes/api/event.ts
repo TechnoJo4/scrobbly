@@ -1,7 +1,7 @@
-import { byMethod, apiGet, apiRoute, urlParamsTo, apiNotFound, apiSuccess, APISuccess } from "../../http.ts";
+import { byMethod, apiGet, apiRoute, urlParamsTo, apiNotFound, apiSuccess, APISuccess } from "../../utils/http.ts";
 import { db, Event } from "../../db/db.ts";
-import { event, idParam } from "../../schema.ts";
-import { time } from "../../time.ts";
+import { event, idParam } from "../../utils/schema.ts";
+import { time } from "../../utils/time.ts";
 
 export default byMethod({
     GET: apiGet<Event>(async (req) => {

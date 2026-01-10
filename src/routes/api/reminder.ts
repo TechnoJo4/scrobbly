@@ -1,6 +1,6 @@
-import { byMethod, apiGet, apiRoute, urlParamsTo, apiNotFound, apiSuccess, APISuccess } from "../../http.ts";
+import { byMethod, apiGet, apiRoute, urlParamsTo, apiNotFound, apiSuccess, APISuccess } from "../../utils/http.ts";
 import { db, Reminder } from "../../db/db.ts";
-import { idParam, reminder } from "../../schema.ts";
+import { idParam, reminder } from "../../utils/schema.ts";
 
 export default byMethod({
     GET: apiGet<Reminder>(async (req) => {
