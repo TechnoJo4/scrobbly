@@ -6,6 +6,8 @@ import { Buttons } from "../components/Buttons.tsx";
 import { QtyInput } from "../components/QtyInput.tsx";
 import { Field } from "../components/Field.tsx";
 import { qtyToStr } from "../utils/unit.ts";
+import { by, by1, map } from "../utils/fn.ts";
+import task from "./api/task.ts";
 
 export default (async () => {
 	const now = time();
@@ -26,39 +28,44 @@ export default (async () => {
 			eb.selectFrom("event")
 				.whereRef("event.task", "=", "quota.task")
 				.where("event.time", ">", eb => eb(eb.unary("-", "quota.period"), "+", now))
-				.select(eb => eb.fn.sum("event.qty").as("qty"))
+				.select(eb => eb.fn.sum<number>("event.qty").as("qty"))
 				.as("qty")
 		])
 		.execute();
 
-	const tasksOverQuota = new Set(quotas.filter(q => (q.qty as number) >= q.max).map(q => q.task));
+	const quotasByTask = by(quotas, q => q.task);
 
 	const tasks = (await db.selectFrom("task")
 		.innerJoin("unit", "task.unit", "unit.name")
 		.select(["task.id", "task.name", "task.unit", "unit.decimals", "unit.pre", "unit.post"])
 		.execute())
-		.map(t => ({ ...t, overQuota: tasksOverQuota.has(t.id) }));
+		.map(t => {
+			const q = quotasByTask.get(t.id);
+			const max = q ? Math.min(...q.map(q => q.max-q.qty!)) : Infinity;
+			return { ...t, max, overQuota: max <= 0 };
+		});
 
-	const timeByTask = Object.fromEntries(latestEvents.map(e => [e.task, e.time]));
+	const tasksById = by1(tasks, t => t.id);
+
+	const timeByTask = map(latestEvents, e => [e.task, e.time]);
 	const activeReminders = reminders
-		.filter(r => !tasksOverQuota.has(r.task))
 		.map(r => ({ ...r, trigger: latestReminderTime(r.since, r.every) }))
-		.filter(r => !timeByTask[r.task] || timeByTask[r.task] < r.trigger);
+		.filter(r => !timeByTask.has(r.task) || timeByTask.get(r.task)! < r.trigger);
 
 	const buttons = await db.selectFrom("button").selectAll().execute();
 
 	return render(
 		<Page>
 			<section class="section-buttons">
-				<Buttons buttons={buttons} tasks={tasks}></Buttons>
+				<Buttons buttons={buttons} tasks={tasksById}></Buttons>
 			</section>
 
 			<h2>active reminders</h2>
 			<section class="section-reminders">
 				{activeReminders.length !== 0 ? <ul class="reminder-list">
-					{activeReminders.map(r => <li class="reminder">
+					{activeReminders.map(r => <li class={`reminder${tasksById.get(r.task)?.overQuota && " reminder-over-quota"}`}>
 						you should <span class="reminder-task">
-							{tasks.find(t => t.id === r.task)!.name}
+							{tasksById.get(r.task)!.name}
 						</span> (<span class="reminder-trigger">{timespanToStr(now - r.trigger)} ago</span>)
 					</li>)}
 				</ul> : <p class="reminders-none">none!</p>}
@@ -81,7 +88,7 @@ export default (async () => {
 			<section class="section-history">
 				<table>
 					{(await db.selectFrom("event").selectAll().orderBy("time", "desc").limit(10).execute()).map(e => {
-						const t = tasks.find(t => t.id === e.task)!;
+						const t = tasksById.get(e.task)!;
 						return <tr>
 							<td>{new Date(e.time).toISOString()}</td>
 							<td>{t.name}</td>

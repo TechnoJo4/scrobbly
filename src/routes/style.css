@@ -71,3 +71,10 @@ table {
 .scrobble-button-over-quota {
     background-color: #ff8080;
 }
+.reminder-over-quota {
+    color: #ff8080;
+}
+
+.reminder-task {
+    font-weight: bold;
+}
