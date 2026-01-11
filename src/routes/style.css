@@ -47,7 +47,7 @@ section {
 }
 
 input[type=number] {
-    width: 3em;
+    max-width: 8ch;
 }
 
 h1, h2, h3, h4, h5, h6, p, ul {
@@ -73,6 +73,9 @@ table {
 }
 .reminder-over-quota {
     color: #ff8080;
+}
+.scrobble-button-reminder {
+    background-color: #77aaff;
 }
 
 .reminder-task {

@@ -22,3 +22,11 @@ export const timespanToStr = (span: number) => {
     }
     return (span/use.ms).toFixed(0)+use.post;
 };
+
+export const timeToStrRel = (t: number, now: number = time()) => {
+    return timespanToStr(now - t)+" ago";
+};
+
+export const timeToStrAbs = (t: number) => {
+    return new Date(t).toISOString().replace("T", " ").replace("Z", "");
+};

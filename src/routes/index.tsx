@@ -1,12 +1,14 @@
 import { render } from '@oomfware/jsx';
 import { db } from "../db/db.ts";
-import { latestReminderTime, time, timespanToStr } from "../utils/time.ts";
+import { latestReminderTime, time } from "../utils/time.ts";
 import { Page } from "../components/Page.tsx";
 import { Buttons } from "../components/Buttons.tsx";
 import { QtyInput } from "../components/QtyInput.tsx";
 import { Field } from "../components/Field.tsx";
 import { qtyToStr } from "../utils/unit.ts";
 import { by, by1, map } from "../utils/fn.ts";
+import { classes } from "../utils/jsx.ts";
+import { TimeAbs, TimeRel } from "../components/Time.tsx";
 
 export default (async () => {
 	const now = time();
@@ -56,7 +58,7 @@ export default (async () => {
 	return render(
 		<Page>
 			<section class="section-buttons">
-				<Buttons buttons={buttons} tasks={tasksById}></Buttons>
+				<Buttons buttons={buttons} tasks={tasksById} activeReminders={activeReminders}></Buttons>
 			</section>
 
 			<h2>active reminders</h2>
@@ -65,7 +67,7 @@ export default (async () => {
 					{activeReminders.map(r => <li class={`reminder${tasksById.get(r.task)?.overQuota && " reminder-over-quota"}`}>
 						you should <span class="reminder-task">
 							{tasksById.get(r.task)!.name}
-						</span> (<span class="reminder-trigger">{timespanToStr(now - r.trigger)} ago</span>)
+						</span> (<TimeRel class="reminder-trigger" time={r.trigger} now={now} />)
 					</li>)}
 				</ul> : <p class="reminders-none">none!</p>}
 			</section>
@@ -76,7 +78,11 @@ export default (async () => {
 					<input type="hidden" name="task" value={t.id} />
 					<Field><QtyInput {...t} /></Field>
 					<Field>
-						<button type="submit" class={`scrobble-button${t.overQuota && " scrobble-button-over-quota"}`}>
+						<button type="submit" class={classes({
+							"scrobble-button": 1,
+							"scrobble-button-over-quota": t.overQuota,
+							"scrobble-button-reminder": activeReminders?.find(r => r.task === t.id)
+						})}>
 							{t.name}
 						</button>
 					</Field>
@@ -89,7 +95,7 @@ export default (async () => {
 					{(await db.selectFrom("event").selectAll().orderBy("time", "desc").limit(10).execute()).map(e => {
 						const t = tasksById.get(e.task)!;
 						return <tr>
-							<td>{new Date(e.time).toISOString()}</td>
+							<td><TimeRel time={e.time} now={now} /></td>
 							<td>{t.name}</td>
 							<td>{qtyToStr(e.qty, t)}</td>
 							<td><a href={`/manage/delete/event?id=${e.id}`}>X</a></td>
@@ -101,8 +107,8 @@ export default (async () => {
 			<h2>manage</h2>
 			<section class="section-manage">
 				<a href="/manage/buttons">buttons</a>
-				<a href="/manage/reminders">reminders</a>
 				<a href="/manage/quotas">quotas</a>
+				<a href="/manage/reminders">reminders</a>
 				<a href="/manage/tasks">tasks</a>
 				<a href="/manage/units">units</a>
 			</section>
