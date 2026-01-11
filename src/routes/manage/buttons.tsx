@@ -40,6 +40,7 @@ export default byMethod({
                             <a href={`/manage/button?id=${b.id}`}>
                                 {b.label && b.label+": "}{t.name} ({qtyToStr(b.qty, t)})
                             </a>
+                            &nbsp;<a href={`/manage/delete/button?id=${b.id}`}>X</a>
                         </li>;
                     })}
                 </ul>

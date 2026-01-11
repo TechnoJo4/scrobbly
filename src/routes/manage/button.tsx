@@ -34,6 +34,7 @@ export default byMethod({
                     </Field>
                     <Field>
                         <button type="submit">save</button>
+                        <a href={`/manage/delete/button?id=${id}`}><button type="button">delete</button></a>
                     </Field>
                 </form>
             </Page>

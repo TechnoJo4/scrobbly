@@ -40,6 +40,7 @@ export default byMethod({
                 <ul>
                     {reminders.map(r => <li class="reminder">
                         {tasks.find(t => t.id == r.task)?.name} every {timespanToStr(r.every)} since {new Date(r.since).toISOString()}
+                        &nbsp;<a href={`/manage/delete/reminder?id=${r.id}`}>X</a>
                     </li>)}
                 </ul>
             </Page>

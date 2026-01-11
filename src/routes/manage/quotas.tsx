@@ -41,6 +41,7 @@ export default byMethod({
                         const t = tasks.find(t => t.id == q.task)!;
                         return <li class="quota">
                             {tasks.find(t => t.id == q.task)?.name}: max {qtyToStr(q.max, t)} within {timespanToStr(q.period)}
+                            &nbsp;<a href={`/manage/delete/quota?id=${q.id}`}>X</a>
                         </li>;
                     })}
                 </ul>
