@@ -7,7 +7,6 @@ import { QtyInput } from "../components/QtyInput.tsx";
 import { Field } from "../components/Field.tsx";
 import { qtyToStr } from "../utils/unit.ts";
 import { by, by1, map } from "../utils/fn.ts";
-import task from "./api/task.ts";
 
 export default (async () => {
 	const now = time();
@@ -93,6 +92,7 @@ export default (async () => {
 							<td>{new Date(e.time).toISOString()}</td>
 							<td>{t.name}</td>
 							<td>{qtyToStr(e.qty, t)}</td>
+							<td><a href={`/manage/delete/event?id=${e.id}`}>X</a></td>
 						</tr>;
 					})}
 				</table>
