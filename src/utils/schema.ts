@@ -6,6 +6,8 @@ export const intStr = v.pipe(v.string(), v.toNumber(), v.integer());
 
 export const idParam = v.object({ id: intStr });
 
+export const checkbox = v.pipe(v.optional(v.string(), ""), v.transform(v => v === "on"));
+
 export const unit = v.object({
     name: v.string(),
     pre: v.optional(v.string(), ""),
@@ -16,6 +18,7 @@ export const unit = v.object({
 export const task = v.object({
     name: v.string(),
     unit: v.string(),
+    hidden: checkbox
 });
 
 export const event = v.object({

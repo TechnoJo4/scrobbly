@@ -29,6 +29,9 @@ export default byMethod({
                             {units.map(u => <option value={u.name} selected={task.unit == u.name}>{u.name}</option>)}
                         </select>
                     </Field>
+                    <Field label="hide">
+                        <input type="checkbox" name="hidden" checked={task.hidden !== 0}></input>
+                    </Field>
                     <Field>
                         <button type="submit">save</button>
                     </Field>

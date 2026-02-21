@@ -8,7 +8,7 @@ import { Field } from "../components/Field.tsx";
 import { qtyToStr } from "../utils/unit.ts";
 import { by, by1, map } from "../utils/fn.ts";
 import { classes } from "../utils/jsx.ts";
-import { TimeAbs, TimeRel } from "../components/Time.tsx";
+import { TimeRel } from "../components/Time.tsx";
 
 export default (async () => {
 	const now = time();
@@ -38,7 +38,7 @@ export default (async () => {
 
 	const tasks = (await db.selectFrom("task")
 		.innerJoin("unit", "task.unit", "unit.name")
-		.select(["task.id", "task.name", "task.unit", "unit.decimals", "unit.pre", "unit.post"])
+		.select(["task.id", "task.name", "task.unit", "task.hidden", "unit.decimals", "unit.pre", "unit.post"])
 		.execute())
 		.map(t => {
 			const q = quotasByTask.get(t.id);
@@ -74,7 +74,7 @@ export default (async () => {
 
 			<h2>tasks</h2>
 			<section class="section-manual">
-				{tasks.map(t => <form class="scrobble-form" action="/scrobble" method="post">
+				{tasks.filter(t => !t.hidden).map(t => <form class="scrobble-form" action="/scrobble" method="post">
 					<input type="hidden" name="task" value={t.id} />
 					<Field><QtyInput {...t} /></Field>
 					<Field>

@@ -42,6 +42,7 @@ export interface TaskTable {
 	id: ColumnType<number, Integer | undefined, Integer>;
 	name: string;
 	unit: string;
+	hidden: ColumnType<number, Integer | undefined, Integer>;
 }
 
 export type Task = Selectable<TaskTable>;
